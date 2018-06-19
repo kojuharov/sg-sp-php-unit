@@ -7,10 +7,10 @@ branches:
     - master
 
 install:
+  - phpenv config-rm xdebug.ini
   - php prepare.php
 
 script:
-  - phpenv config-rm xdebug.ini
   - travis_wait 30 php test.php
 
 after_script:
