@@ -1,14 +1,11 @@
 <?php
-
 /**
  * Utility functions for the test runner.
  */
-
 /**
  * Check for required environment variables.
  */
-function check_required_env() {
-
+function check_required_env( $check_db = true ) {
 	$required = array(
 		'WPT_PREPARE_DIR',
 		'WPT_TEST_DIR',
@@ -18,19 +15,19 @@ function check_required_env() {
 		'WPT_DB_HOST',
 	);
 	foreach( $required as $var ) {
+		if ( ! $check_db && 0 === strpos( $var, 'WPT_DB_' ) ) {
+			continue;
+		}
 		if ( false === getenv( $var ) ) {
 			error_message( $var . ' must be set as an environment variable.' );
 		}
 	}
-
-	if ( false === getenv( 'WPT_SSH_CONNECT' )
+	if ( empty( getenv( 'WPT_SSH_CONNECT' ) )
 		&& getenv( 'WPT_TEST_DIR' ) !== getenv( 'WPT_PREPARE_DIR' ) ) {
 		error_message( 'WPT_TEST_DIR must be the same as WPT_PREPARE_DIR when running locally.' );
 	}
-
 	log_message( 'Environment variables pass checks.' );
 }
-
 /**
  * Perform some number of shell operations
  *
@@ -45,7 +42,6 @@ function perform_operations( $operations ) {
 		}
 	}
 }
-
 /**
  * Log a message to STDOUT
  *
@@ -54,7 +50,6 @@ function perform_operations( $operations ) {
 function log_message( $message ) {
 	fwrite( STDOUT, $message . PHP_EOL );
 }
-
 /**
  * Log an error message to STDERR
  *
@@ -64,7 +59,6 @@ function error_message( $message ) {
 	fwrite( STDERR, 'Error: ' . $message . PHP_EOL );
 	exit( 1 );
 }
-
 /**
  * Add a trailing slash to the string
  *
@@ -74,7 +68,6 @@ function error_message( $message ) {
 function trailingslashit( $string ) {
 	return rtrim( $string, '/' ) . '/';
 }
-
 /**
  * Process JUnit test results and return JSON. The resulting JSON will only
  * include failures.
@@ -84,28 +77,33 @@ function trailingslashit( $string ) {
  */
 function process_junit_xml( $xml_string )
 {
+	if ( empty( $xml_string ) ) {
+		return '';
+	}
 	$xml = simplexml_load_string( $xml_string );
 	$xml_string = null;
 	$project = $xml->testsuite;
 	$results = array();
-
 	$results = array(
 		'tests' => (string) $project['tests'],
 		'failures' => (string) $project['failures'],
 		'errors' => (string) $project['errors'],
 		'time' => (string) $project['time'],
 	);
-
 	$results['testsuites'] = array();
 	foreach ( $project->testsuite as $testsuite ) {
 		// Handle nested testsuites like tests with data providers.
 		$testsuite = isset( $testsuite->testsuite ) ? $testsuite->testsuite : $testsuite;
-		$results['testsuites'][ (string) $testsuite['name'] ] = array(
+		$result = array(
 			'name' => (string) $testsuite['name'],
 			'tests' => (string) $testsuite['tests'],
 			'failures' => (string) $testsuite['failures'],
 			'errors' => (string) $testsuite['errors']
 		);
+		if ( empty( $result['failures'] ) && empty( $result['errors'] ) ) {
+			continue;
+		}
+		$results['testsuites'][ (string) $testsuite['name'] ] = $result;
 		$results['testsuites'][ (string) $testsuite['name'] ]['testcases'] = array();
 		foreach ( $testsuite->testcase as $testcase ) {
 			// Capture both failure and error children.
@@ -119,10 +117,8 @@ function process_junit_xml( $xml_string )
 			}
 		}
 	}
-
 	return json_encode( $results );
 }
-
 /**
  * Upload the results to the reporting API.
  *
@@ -147,7 +143,6 @@ function upload_results( $results, $rev, $message, $env, $api_key ) {
 		'env' => $env,
 	);
 	$data_string = json_encode( $data );
-
 	curl_setopt( $process, CURLOPT_TIMEOUT, 30 );
 	curl_setopt( $process, CURLOPT_POST, 1 );
 	curl_setopt( $process, CURLOPT_CUSTOMREQUEST, 'POST' );
@@ -158,10 +153,48 @@ function upload_results( $results, $rev, $message, $env, $api_key ) {
 		'Content-Type: application/json',
 		'Content-Length: ' . strlen( $data_string )
 	));
-
 	$return = curl_exec( $process );
 	$status_code = curl_getinfo( $process, CURLINFO_HTTP_CODE );
 	curl_close( $process );
-
 	return array( $status_code, $return );
+}
+/**
+ * Get the environmental details
+ */
+function get_env_details() {
+	$env = array(
+		'php_version'    => phpversion(),
+		'php_modules'    => array(),
+		'system_utils'   => array(),
+		'mysql_version'  => trim( shell_exec( 'mysql --version' ) ),
+		'os_name'        => trim( shell_exec( 'uname -s' ) ),
+		'os_version'     => trim( shell_exec( 'uname -r' ) ),
+	);
+	$php_modules = array(
+		'bcmath',
+		'curl',
+		'filter',
+		'gd',
+		'libsodium',
+		'mcrypt',
+		'mod_xml',
+		'mysqli',
+		'imagick',
+		'pcre',
+		'xml',
+		'xmlreader',
+		'zlib',
+	);
+	foreach( $php_modules as $php_module ) {
+		$env['php_modules'][ $php_module ] = phpversion( $php_module );
+	}
+	$curl_bits = explode( PHP_EOL, str_replace( 'curl ', '', shell_exec( 'curl --version' ) ) );
+	$curl = array_shift( $curl_bits );
+	$env['system_utils']['curl'] = trim( $curl );
+	$env['system_utils']['ghostscript'] = trim( shell_exec( 'gs --version' ) );
+	$ret = shell_exec( 'convert --version' );
+	preg_match( '#Version: ImageMagick ([^\s]+)#', $ret, $matches );
+	$env['system_utils']['imagemagick'] = isset( $matches[1] ) ? $matches[1] : false;
+	$env['system_utils']['openssl'] = str_replace( 'OpenSSL ', '', trim( shell_exec( 'openssl version' ) ) );
+	return $env;
 }
