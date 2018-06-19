@@ -8,6 +8,9 @@ branches:
 
 install:
   - php prepare.php
+  
+before_script:
+  - echo 'suhosin.executor.include.whitelist = phar' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 script:
   - php test.php
