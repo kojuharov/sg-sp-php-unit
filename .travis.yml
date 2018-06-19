@@ -10,7 +10,7 @@ install:
   - php prepare.php
 
 script:
-  - travis_wait php test.php
+  - travis_wait 30 php test.php
 
 after_script:
   - php report.php
