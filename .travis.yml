@@ -14,5 +14,5 @@ script:
   - travis_wait 30 php test.php
 
 after_script:
-  - php report.php
+- php report.php
 - php cleanup.php
