@@ -5,12 +5,14 @@ language: php
 branches:
   only:
     - master
+before_install:
+  - echo 'suhosin.executor.include.whitelist = phar' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 install:
   - php prepare.php
   
 before_script:
-  - echo 'suhosin.executor.include.whitelist = phar' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - phpenv config-rm xdebug.ini
 
 script:
   - php test.php
