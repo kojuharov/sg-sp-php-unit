@@ -10,13 +10,3 @@ before_install:
 
 install:
   - php prepare.php
-  
-before_script:
-  - phpenv config-rm xdebug.ini
-
-script:
-  - php test.php
-
-after_script:
-- php report.php
-- php cleanup.php
