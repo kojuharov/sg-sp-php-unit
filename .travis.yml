@@ -11,8 +11,8 @@ before_install:
   - echo 'suhosin.executor.include.whitelist = phar' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 install:
-  - php prepare.php
   - phpenv config-rm xdebug.ini
+  - php prepare.php
 
 script:
   - php test.php
