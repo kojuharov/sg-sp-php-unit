@@ -7,9 +7,7 @@ php:
 branches:
   only:
     - master
-before_install:
-  - echo 'suhosin.executor.include.whitelist = phar' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-
+    
 install:
   - phpenv config-rm xdebug.ini
   - php prepare.php
