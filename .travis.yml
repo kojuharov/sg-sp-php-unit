@@ -1,6 +1,8 @@
 sudo: false
 
 language: php
+php:
+  - '7.0'
 
 branches:
   only:
@@ -10,3 +12,11 @@ before_install:
 
 install:
   - php prepare.php
+  - phpenv config-rm xdebug.ini
+
+script:
+  - php test.php
+
+after_script:
+  - php report.php
+  - php cleanup.php
