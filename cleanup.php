@@ -15,7 +15,7 @@ $WPT_RM_TEST_DIR_CMD = getenv( 'WPT_RM_TEST_DIR_CMD' ) ? : 'rm -r ' . $WPT_TEST_
 // Only forcefully delete the .git directory, to prevent disasters otherwise
 perform_operations( array(
 	'rm -rf ' . escapeshellarg( $WPT_PREPARE_DIR . '/.git' ),
-	'rm -r ' . escapeshellarg( $WPT_PREPARE_DIR ),
+	'rm -rf ' . escapeshellarg( $WPT_PREPARE_DIR ),
 ) );
 // Clean up the test directory in remote environments
 if ( ! empty( $WPT_SSH_CONNECT ) ) {
