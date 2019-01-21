@@ -1,5 +1,9 @@
 sudo: false
 
+notifications:
+  email:
+    - georgi.kojuharov@siteground.com
+    
 language: php
 php:
   - '7.0'
