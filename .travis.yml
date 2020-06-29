@@ -12,6 +12,9 @@ branches:
   only:
     - master
     
+before_install:
+  - npm install -g npm@latest
+    
 install:
   - phpenv config-rm xdebug.ini
   - php prepare.php
