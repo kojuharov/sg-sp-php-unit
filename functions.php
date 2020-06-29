@@ -1,11 +1,14 @@
 <?php
+
 /**
  * Utility functions for the test runner.
  */
+
 /**
  * Check for required environment variables.
  */
 function check_required_env( $check_db = true ) {
+
 	$required = array(
 		'WPT_PREPARE_DIR',
 		'WPT_TEST_DIR',
@@ -22,12 +25,15 @@ function check_required_env( $check_db = true ) {
 			error_message( $var . ' must be set as an environment variable.' );
 		}
 	}
+
 	if ( empty( getenv( 'WPT_SSH_CONNECT' ) )
 		&& getenv( 'WPT_TEST_DIR' ) !== getenv( 'WPT_PREPARE_DIR' ) ) {
 		error_message( 'WPT_TEST_DIR must be the same as WPT_PREPARE_DIR when running locally.' );
 	}
+
 	log_message( 'Environment variables pass checks.' );
 }
+
 /**
  * Perform some number of shell operations
  *
@@ -42,6 +48,7 @@ function perform_operations( $operations ) {
 		}
 	}
 }
+
 /**
  * Log a message to STDOUT
  *
@@ -50,6 +57,7 @@ function perform_operations( $operations ) {
 function log_message( $message ) {
 	fwrite( STDOUT, $message . PHP_EOL );
 }
+
 /**
  * Log an error message to STDERR
  *
@@ -59,6 +67,7 @@ function error_message( $message ) {
 	fwrite( STDERR, 'Error: ' . $message . PHP_EOL );
 	exit( 1 );
 }
+
 /**
  * Add a trailing slash to the string
  *
@@ -68,6 +77,7 @@ function error_message( $message ) {
 function trailingslashit( $string ) {
 	return rtrim( $string, '/' ) . '/';
 }
+
 /**
  * Process JUnit test results and return JSON. The resulting JSON will only
  * include failures.
@@ -80,45 +90,53 @@ function process_junit_xml( $xml_string )
 	if ( empty( $xml_string ) ) {
 		return '';
 	}
+
 	$xml = simplexml_load_string( $xml_string );
 	$xml_string = null;
 	$project = $xml->testsuite;
 	$results = array();
+
 	$results = array(
-		'tests' => (string) $project['tests'],
+		'tests'    => (string) $project['tests'],
 		'failures' => (string) $project['failures'],
-		'errors' => (string) $project['errors'],
-		'time' => (string) $project['time'],
+		'errors'   => (string) $project['errors'],
+		'time'     => (string) $project['time'],
 	);
+
 	$results['testsuites'] = array();
-	foreach ( $project->testsuite as $testsuite ) {
-		// Handle nested testsuites like tests with data providers.
-		$testsuite = isset( $testsuite->testsuite ) ? $testsuite->testsuite : $testsuite;
+
+	$testsuites = $xml->xpath( '//testsuites//testsuite[ ( count( testcase ) > 0 ) and ( @errors > 0 or @failures > 0 ) ]' );
+	foreach ( $testsuites as $testsuite ) {
 		$result = array(
-			'name' => (string) $testsuite['name'],
-			'tests' => (string) $testsuite['tests'],
+			'name'     => (string) $testsuite['name'],
+			'tests'    => (string) $testsuite['tests'],
 			'failures' => (string) $testsuite['failures'],
-			'errors' => (string) $testsuite['errors']
+			'errors'   => (string) $testsuite['errors']
 		);
 		if ( empty( $result['failures'] ) && empty( $result['errors'] ) ) {
 			continue;
 		}
-		$results['testsuites'][ (string) $testsuite['name'] ] = $result;
-		$results['testsuites'][ (string) $testsuite['name'] ]['testcases'] = array();
+		$failures = array();
 		foreach ( $testsuite->testcase as $testcase ) {
 			// Capture both failure and error children.
 			foreach ( array( 'failure', 'error') as $key ) {
 				if ( isset( $testcase->{$key} ) ) {
-					$results['testsuites'][ (string) $testsuite['name'] ]['testcases'][ (string) $testcase['name'] ] = array(
+					$failures[ (string) $testcase['name'] ] = array(
 						'name' => (string) $testcase['name'],
-						$key => (string) $testcase->{$key},
+						$key   => (string) $testcase->{$key},
 					);
 				}
 			}
 		}
+		if ( $failures ) {
+			$results['testsuites'][ (string) $testsuite['name'] ] = $result;
+			$results['testsuites'][ (string) $testsuite['name'] ]['testcases'] = $failures;
+		}
 	}
+
 	return json_encode( $results );
 }
+
 /**
  * Upload the results to the reporting API.
  *
@@ -138,11 +156,12 @@ function upload_results( $results, $rev, $message, $env, $api_key ) {
 	$access_token = base64_encode( $api_key );
 	$data = array(
 		'results' => $results,
-		'commit' => $rev,
+		'commit'  => $rev,
 		'message' => $message,
-		'env' => $env,
+		'env'     => $env,
 	);
 	$data_string = json_encode( $data );
+
 	curl_setopt( $process, CURLOPT_TIMEOUT, 30 );
 	curl_setopt( $process, CURLOPT_POST, 1 );
 	curl_setopt( $process, CURLOPT_CUSTOMREQUEST, 'POST' );
@@ -153,11 +172,14 @@ function upload_results( $results, $rev, $message, $env, $api_key ) {
 		'Content-Type: application/json',
 		'Content-Length: ' . strlen( $data_string )
 	));
+
 	$return = curl_exec( $process );
 	$status_code = curl_getinfo( $process, CURLINFO_HTTP_CODE );
 	curl_close( $process );
+
 	return array( $status_code, $return );
 }
+
 /**
  * Get the environmental details
  */
