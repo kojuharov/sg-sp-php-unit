@@ -32,7 +32,7 @@ if ( ! empty( $WPT_SSH_PRIVATE_KEY_BASE64 ) ) {
 perform_operations( array(
 	'mkdir -p ' . escapeshellarg( $WPT_PREPARE_DIR ),
 	'git clone --depth=1 https://github.com/WordPress/wordpress-develop.git ' . escapeshellarg( $WPT_PREPARE_DIR ),
-	'wget -O ' .  escapeshellarg( $WPT_PREPARE_DIR . '/phpunit.phar' ) . ' https://phar.phpunit.de/phpunit-5.7.phar',
+	'wget -O ' .  escapeshellarg( $WPT_PREPARE_DIR . '/phpunit.phar' ) . ' https://phar.phpunit.de/phpunit-9.2.5.phar',
 	'wget -O ' . escapeshellarg( $WPT_PREPARE_DIR . '/tests/phpunit/data/plugins/wordpress-importer.zip' ) . ' https://downloads.wordpress.org/plugin/wordpress-importer.zip',
 	'cd ' . escapeshellarg( $WPT_PREPARE_DIR . '/tests/phpunit/data/plugins/' ) . '; unzip wordpress-importer.zip; rm wordpress-importer.zip',
 	'cd ' . escapeshellarg( $WPT_PREPARE_DIR ) . '; npm --version; npm install && grunt build',
