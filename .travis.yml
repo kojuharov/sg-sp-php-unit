@@ -4,6 +4,8 @@ notifications:
 language: php
 node_js:
   - node
+before_install:
+  - npm install 
 install:
   - php prepare.php
 script:
