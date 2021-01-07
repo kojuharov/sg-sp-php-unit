@@ -8,6 +8,8 @@ node_js:
 cache:
   npm: false
 
+broken line
+
 before_install:
   - npm install -g npm@latest
 
