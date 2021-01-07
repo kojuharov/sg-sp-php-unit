@@ -5,6 +5,8 @@ notifications:
 language: php
 node_js:
   - node
+cache:
+  npm: false
 
 before_install:
   - npm install -g npm@latest
