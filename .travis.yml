@@ -5,9 +5,8 @@ notifications:
     - georgi.kojuharov@siteground.com
     
 language: php
-php:
-  - '7.3'
-node_js: 15
+node_js:
+  - node
 
 branches:
   only:
@@ -17,7 +16,6 @@ before_install:
   - npm install -g npm@latest
     
 install:
-  - phpenv config-rm xdebug.ini
   - php prepare.php
 
 script:
