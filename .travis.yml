@@ -5,7 +5,7 @@ language: php
 node_js:
   - "12.13"
 before_install:
-  - npm install -g npm@12.13
+  - npm install -g npm@6.12.0
 install:
   - php prepare.php
 script:
