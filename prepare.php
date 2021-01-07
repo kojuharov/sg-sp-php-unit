@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Prepares the environment for the test run.
+ * Prepares the environment for the test run. 
  */
 
 require __DIR__ . '/functions.php';
