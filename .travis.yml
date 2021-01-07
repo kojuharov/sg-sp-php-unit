@@ -3,7 +3,7 @@ notifications:
     - georgi.kojuharov@siteground.com
 language: php
 node_js:
-  - 12.18.1
+  - "12.18.1"
 before_install:
   - npm install -g npm@latest
 install:
