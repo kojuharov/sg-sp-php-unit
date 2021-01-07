@@ -1,22 +1,15 @@
 notifications:
   email:
     - georgi.kojuharov@siteground.com
-    
 language: php
 node_js:
   - "12.13"
-  - "lts/*"
-  - "node"
-
 before_install:
   - npm install -g npm@latest
-
 install:
   - php prepare.php
-
 script:
   - php test.php
-
 after_script:
   - php report.php
   - php cleanup.php
