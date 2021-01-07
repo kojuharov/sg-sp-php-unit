@@ -35,7 +35,7 @@ perform_operations( array(
 	'wget -O ' .  escapeshellarg( $WPT_PREPARE_DIR . '/phpunit.phar' ) . ' https://phar.phpunit.de/phpunit-5.7.phar',
 	'wget -O ' . escapeshellarg( $WPT_PREPARE_DIR . '/tests/phpunit/data/plugins/wordpress-importer.zip' ) . ' https://downloads.wordpress.org/plugin/wordpress-importer.zip',
 	'cd ' . escapeshellarg( $WPT_PREPARE_DIR . '/tests/phpunit/data/plugins/' ) . '; unzip wordpress-importer.zip; rm wordpress-importer.zip',
-	'cd ' . escapeshellarg( $WPT_PREPARE_DIR ) . '; npm --version; npm install && grunt build',
+	'cd ' . escapeshellarg( $WPT_PREPARE_DIR ) . '; npm install && npm run build',
 ) );
 
 // Replace variables in the wp-config.php file.
@@ -113,7 +113,7 @@ if ( ! empty( $WPT_SSH_CONNECT ) ) {
 	}
 
 	perform_operations( array(
-		'rsync ' . $rsync_options . ' --exclude=".git/" -e "ssh ' . $WPT_SSH_OPTIONS . '" ' . escapeshellarg( trailingslashit( $WPT_PREPARE_DIR )  ) . ' ' . escapeshellarg( $WPT_SSH_CONNECT . ':' . $WPT_TEST_DIR ),
+		'rsync ' . $rsync_options . ' --exclude=".git/" --exclude="node_modules/" -e "ssh ' . $WPT_SSH_OPTIONS . '" ' . escapeshellarg( trailingslashit( $WPT_PREPARE_DIR )  ) . ' ' . escapeshellarg( $WPT_SSH_CONNECT . ':' . $WPT_TEST_DIR ),
 	) );
 }
 
