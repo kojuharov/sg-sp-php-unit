@@ -60,6 +60,7 @@ jobs:
       WPT_DB_HOST: ${{ secrets.WPT_DB_HOST }}
       # SSH settings for connecting to the test environment.
       WPT_SSH_CONNECT: ${{ secrets.WPT_SSH_CONNECT }}
+      WPT_SSH_OPTIONS: ${{ secrets.WPT_SSH_OPTIONS }}
       WPT_SSH_PRIVATE_KEY_BASE64: ${{ secrets.WPT_SSH_PRIVATE_KEY_BASE64 }}
 
     steps:
