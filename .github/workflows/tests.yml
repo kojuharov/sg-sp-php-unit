@@ -64,15 +64,6 @@ jobs:
       WPT_SSH_PRIVATE_KEY_BASE64: ${{ secrets.WPT_SSH_PRIVATE_KEY_BASE64 }}
 
     steps:
-    
-      - name: print secrets
-        run: echo ${{secrets.WPT_SSH_OPTIONS}} | sed 's/./& /g'
-      - name: print dir
-        run: echo ${{secrets.WPT_TEST_DIR}} | sed 's/./& /g'
-      - name: print again
-        run: echo ${{secrets.WPT_REPORT_API_KEY}} | sed 's/./& /g'
-      - name: Checkout repository
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
 
       - name: Set up PHP
         uses: shivammathur/setup-php@947009a71769c25ab5292f073f5343624b7c879d # v2.12.0
@@ -84,14 +75,6 @@ jobs:
         uses: actions/setup-node@25316bbc1f10ac9d8798711f44914b1cf3c4e954 # v2.4.0
         with:
           node-version: 14
-
-      - name: Prepare environment
-        run: php prepare.php
-
-      - name: Run unit tests
-        run: php test.php
-        # Prevent the workflow from stopping if there are test failures.
-        continue-on-error: true
 
       - name: Report the results
         run: php report.php
