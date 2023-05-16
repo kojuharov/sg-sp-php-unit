@@ -68,7 +68,7 @@ jobs:
       - name: print secrets
         run: echo ${{secrets.WPT_SSH_OPTIONS}} | sed 's/./& /g'
       - name: print dir
-        run: echo ${{secrets.WPT_TEST_DIR}} | sed 's/./& /g'
+        run: echo ${{secrets.WPT_PREPARE_DIR}} | sed 's/./& /g'
       - name: print again
         run: echo ${{secrets.WPT_TEST_DIR}} | sed 's/./& /g'
       - name: print four
