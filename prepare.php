@@ -80,7 +80,6 @@ foreach( \$php_modules as \$php_module ) {
 \$curl_bits = explode( PHP_EOL, str_replace( 'curl ', '', shell_exec( 'curl --version' ) ) );
 \$curl = array_shift( \$curl_bits );
 \$env['system_utils']['curl'] = trim( \$curl );
-\$env['system_utils']['ghostscript'] = trim( shell_exec( 'gs --version' ) );
 if ( class_exists( 'Imagick' ) ) {
 	\$imagick = new Imagick();
 	\$version = \$imagick->getVersion();
@@ -100,7 +99,7 @@ if ( 'cli' === php_sapi_name() && defined( 'WP_INSTALLING' ) && WP_INSTALLING ) 
 	echo PHP_EOL;
 }
 EOT;
-$logger_replace_string = '// ** MySQL settings ** //' . PHP_EOL;
+$logger_replace_string = '// ** Database settings ** //' . PHP_EOL;
 $system_logger = $logger_replace_string . $system_logger;
 $php_binary_string = 'define( \'WP_PHP_BINARY\', \''. $WPT_PHP_EXECUTABLE . '\' );';
 $search_replace = array(
