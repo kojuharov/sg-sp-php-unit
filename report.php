@@ -36,7 +36,7 @@ if ( 'verbose' === $WPT_DEBUG ) {
 }
 
 $junit_exec = 'rsync ' . $rsync_options . ' ' . $junit_location . ' ' . escapeshellarg( $WPT_PREPARE_DIR );
-$echoes = echo $junit_exec
+$echoes = echo $junit_exec;
 perform_operations( array(
 	$echoes,
 	$junit_exec,
