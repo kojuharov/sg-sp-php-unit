@@ -24,12 +24,12 @@ $message = trim( exec('git --git-dir=' . escapeshellarg( $WPT_PREPARE_DIR ) . '/
 
 log_message('Copying junit.xml results');
 $junit_location = escapeshellarg( $WPT_TEST_DIR ) . '/tests/phpunit/build/logs/*';
-echo $junit_location;
+echo "First is " . $junit_location;
 
 if ( ! empty( $WPT_SSH_CONNECT ) ) {
 	$junit_location = '-e "ssh ' . $WPT_SSH_OPTIONS . '" ' . escapeshellarg( $WPT_SSH_CONNECT . ':' . $junit_location );
 }
-echo $junit_location;
+echo "Second is " . $junit_location;
 
 $rsync_options = '-r';
 
@@ -38,7 +38,7 @@ if ( 'verbose' === $WPT_DEBUG ) {
 }
 
 $junit_exec = 'rsync ' . $rsync_options . ' ' . $junit_location . ' ' . escapeshellarg( $WPT_PREPARE_DIR );
-echo $junit_exec;
+echo "Last is " . $junit_exec;
 perform_operations( array(
 	$junit_exec,
 ) );
