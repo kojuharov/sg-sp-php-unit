@@ -29,7 +29,7 @@ if ( ! empty( $WPT_SSH_CONNECT ) ) {
 	$junit_location = '-e "ssh ' . $WPT_SSH_OPTIONS . '" ' . escapeshellarg( $WPT_SSH_CONNECT . ':' . $junit_location );
 }
 
-$rsync_options = '-r';
+$rsync_options = '-rvv';
 
 if ( 'verbose' === $WPT_DEBUG ) {
 	$rsync_options = $rsync_options . 'v';
