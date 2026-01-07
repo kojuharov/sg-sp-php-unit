@@ -118,7 +118,8 @@ perform_operations( array(
 
 	// Change directory to the preparation directory, install npm dependencies, and build the project.
 // Build Gutenberg, Build Core, then manually copy the missing artifact to src/
-'cd ' . escapeshellarg( $runner_vars['WPT_PREPARE_DIR'] ) . '; npm install && npm run build && cp -r build/wp-includes/build src/wp-includes/',
+'cd ' . escapeshellarg( $runner_vars['WPT_PREPARE_DIR'] ) . '; npm install && npm run gutenberg:integrate && npm run build && cp -r build/wp-includes/* src/wp-includes/',
+
 ) );
 
 // Log a message indicating the start of the variable replacement process for configuration.
