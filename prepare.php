@@ -18,6 +18,11 @@ require __DIR__ . '/functions.php';
 check_required_env();
 
 /**
+ * Ensure that optional environment variables are present with default values.
+ */
+$runner_vars = setup_runner_env_vars();
+
+/**
  * Retrieves environment variables and sets defaults for test preparation.
  * These variables are used to configure SSH connections, file paths, and
  * executable commands needed for setting up the test environment.
