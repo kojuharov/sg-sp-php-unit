@@ -357,14 +357,9 @@ if ( ! empty( $WPT_SSH_CONNECT ) ) {
 	// This operation synchronizes the test environment with the prepared files, excluding version control directories
 	// and other non-essential files for test execution.
 // Always sync prepared files into the test directory (local)
-perform_operations( array(
-	'rsync -a --delete ' .
-	'--exclude=".git/" ' .
-	'--exclude="node_modules/" ' .
-	'--exclude="composer.phar" ' .
-	escapeshellarg( trailingslashit( $WPT_PREPARE_DIR ) ) . ' ' .
-	escapeshellarg( trailingslashit( $WPT_TEST_DIR ) )
-) );
+	perform_operations( array(
+		'rsync ' . $rsync_options . ' --exclude=".git/" --exclude="node_modules/" --exclude="composer.phar" -e "ssh ' . $WPT_SSH_OPTIONS . '" ' . escapeshellarg( trailingslashit( $WPT_PREPARE_DIR )  ) . ' ' . escapeshellarg( $WPT_SSH_CONNECT . ':' . $WPT_TEST_DIR ),
+	) );
 }
 // Log a success message indicating that the environment has been prepared.
 log_message( 'Success: Prepared environment.' );
