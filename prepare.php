@@ -117,8 +117,7 @@ perform_operations( array(
 	'git clone --depth=1 https://github.com/WordPress/wordpress-develop.git ' . escapeshellarg( $runner_vars['WPT_PREPARE_DIR'] ),
 
 	// Change directory to the preparation directory, install npm dependencies, and build the project.
-	'cd ' . escapeshellarg( $runner_vars['WPT_PREPARE_DIR'] ) . '; npm install && npm run gutenberg:integrate && npm run build',
-
+    'cd ' . escapeshellarg( $runner_vars['WPT_PREPARE_DIR'] ) . '; npm install && npm run build && npm run gutenberg:integrate',
 
 ) );
 
