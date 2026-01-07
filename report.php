@@ -49,7 +49,7 @@ $message = trim( exec('git --git-dir=' . escapeshellarg( $runner_vars['WPT_PREPA
  * safely used in shell commands.
  */
 log_message('Copying junit.xml results');
-$junit_location = escapeshellarg( $runner_vars['WPT_TEST_DIR'] ) . '/tests/phpunit/build/logs/*';
+$junit_location = escapeshellarg( $runner_vars['WPT_PREPARE_DIR'] ) . '/tests/phpunit/build/logs/*';
 /**
  * Modifies the junit.xml results file path for a remote location if an SSH connection is available.
  * If the WPT_SSH_CONNECT environment variable is not empty, indicating that an SSH connection
