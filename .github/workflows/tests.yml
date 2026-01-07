@@ -64,20 +64,19 @@ jobs:
       WPT_SSH_PRIVATE_KEY_BASE64: ${{ secrets.WPT_SSH_PRIVATE_KEY_BASE64 }}
 
     steps:
-    
       - name: Checkout repository
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@c5fc0d8281aba02c7fda07d3a70cc5371548067d # v2.25.2
+        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.36.0
         with:
-          php-version: '8.2'
+          php-version: '7.4'
           coverage: none
 
       - name: Install NodeJS
-        uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
-          node-version: 22.4.0
+          node-version: 20
 
       - name: Prepare environment
         run: php prepare.php
@@ -89,6 +88,8 @@ jobs:
 
       - name: Report the results
         run: php report.php
+        # Prevent the workflow from stopping if the reporting fails.
+        continue-on-error: true
 
       - name: Cleanup
         run: php cleanup.php
