@@ -117,8 +117,8 @@ perform_operations( array(
 	'git clone --depth=1 https://github.com/WordPress/wordpress-develop.git ' . escapeshellarg( $runner_vars['WPT_PREPARE_DIR'] ),
 
 	// Change directory to the preparation directory, install npm dependencies, and build the project.
-    'cd ' . escapeshellarg( $runner_vars['WPT_PREPARE_DIR'] ) . '; npm install && npm run build && npm run gutenberg:integrate',
-
+// Build Gutenberg, Build Core, then manually copy the missing artifact to src/
+'cd ' . escapeshellarg( $runner_vars['WPT_PREPARE_DIR'] ) . '; npm install && npm run build && cp -r build/wp-includes/build src/wp-includes/',
 ) );
 
 // Log a message indicating the start of the variable replacement process for configuration.
