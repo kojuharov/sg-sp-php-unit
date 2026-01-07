@@ -366,6 +366,6 @@ perform_operations( array(
 	escapeshellarg( trailingslashit( $WPT_PREPARE_DIR ) ) . ' ' .
 	escapeshellarg( trailingslashit( $WPT_TEST_DIR ) )
 ) );
-
+}
 // Log a success message indicating that the environment has been prepared.
 log_message( 'Success: Prepared environment.' );
