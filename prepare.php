@@ -118,7 +118,7 @@ perform_operations( array(
 
 	// Change directory to the preparation directory, install npm dependencies, and build the project.
 // Build Gutenberg, Build Core, then manually copy the missing artifact to src/
-'cd ' . escapeshellarg( $runner_vars['WPT_PREPARE_DIR'] ) . '; npm install && npm run build && cp -r build/wp-includes/* src/wp-includes/',
+'cd ' . escapeshellarg( $runner_vars['WPT_PREPARE_DIR'] ) . '; npm install && npm run build && cp -r build/wp-includes/* src/wp-includes/ && cp -r build/wp-admin/* src/wp-admin/',
 
 ) );
 
