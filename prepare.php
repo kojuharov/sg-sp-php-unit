@@ -251,7 +251,7 @@ $search_replace = array(
 	'yourusernamehere'                      => trim( getenv( 'WPT_DB_USER' ) ),
 	'yourpasswordhere'                      => trim( getenv( 'WPT_DB_PASSWORD' ) ),
 	'localhost'                             => trim( getenv( 'WPT_DB_HOST' ) ),
-	'define( \'WP_PHP_BINARY\', \'php\' );' => $php_binary_string,
+	'define( \'WP_PHP_BINARY\', \'php\' );' => $php_binary_string . PHP_EOL . "define( 'SCRIPT_DEBUG', true );",
 	$logger_replace_string                  => $system_logger,
 );
 
